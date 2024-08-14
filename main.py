@@ -4,5 +4,7 @@ app = Application()
 while(True):
     entrada = input()
     if entrada == 'exit':
-        pass
+        break
+    else:
+        app.showGame(1)
     

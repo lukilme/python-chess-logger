@@ -3,6 +3,7 @@ import pickle
 import glob
 import os
 import subprocess
+import json
 
 class Path:
     def __init__(self, path):
@@ -35,17 +36,24 @@ class Configuration:
     
     def save(self):
         try:
-            with open(f'{self.root}/config.bin', "wb") as f:
-                pickle.dump(self, f)
+            config_data = {
+                'last_id_game': self.last_id_game,
+                'last_id_analysis': self.last_id_analysis
+            }
+            os.makedirs(f'{self.root}\\chess-logger', exist_ok=True)
+            with open(f'{self.root}\\chess-logger\\config.json', "w") as f:
+                json.dump(config_data, f)
         except Exception as e:
             print(e)
 
     def load(self):
         try:
-            with open(f'{self.root}/config.bin', "rb") as f:
-                loaded_config = pickle.load(f)
-                self.__dict__.update(loaded_config.__dict__)
+            with open(f'{self.root}\\chess-logger\\config.json', "r") as f:
+                loaded_config = json.load(f)
+                self.last_id_game = loaded_config.get('last_id_game', 0)
+                self.last_id_analysis = loaded_config.get('last_id_analysis', 0)
         except Exception as e:
+            print("Erro ao carregar a configuração.")
             print(e)
     
 class Repository:
@@ -53,12 +61,12 @@ class Repository:
         self.system = "Windows"
         self.root = pathlib.Path().resolve()
         self.config = Configuration(self.root.parent)
-        self.database = self.root / "data"
+        self.database = str(self.root) + "\\src\\data"
     
 
     def saveGame(self, savedGame):
         try:
-            with open(str(self.database)+f'/games/game{self.config.last_id_game+1}.bin', "wb") as f:
+            with open(self.database+f'\\games\\game{self.config.last_id_game+1}.bin', "wb") as f:
                 self.config.last_id_game+=1
                 pickle.dump(savedGame, f)
         except Exception as e:
@@ -66,7 +74,8 @@ class Repository:
 
     def saveAnalysis(self, savedAnalysis):
         try:
-            with open(str(self.database)+f'/analysis/analysis{self.config.last_id_analysis+1}.bin', "wb") as f:
+            print(self.database)
+            with open(self.database+f'\\analysis\\analysis{self.config.last_id_analysis+1}.bin', "wb") as f:
                 self.config.last_id_analysis+=1
                 pickle.dump(savedAnalysis, f)
         except Exception as e:
@@ -74,7 +83,7 @@ class Repository:
 
     def getGame(self, idGame):
         try:
-            with open(str(self.database)+f'/games/game{idGame}.bin', "rb") as f:
+            with open(self.database+f'\\games\\game{idGame}.bin', "rb") as f:
                 d = pickle.load(f)
                 return d
         except Exception as e:
@@ -82,7 +91,8 @@ class Repository:
 
     def getAnalysis(self, idAnalysis):
         try:
-            with open(str(self.database)+f'/analysis/analysis{idAnalysis}.bin', "rb") as f:
+            print(self.database+f'\\analysis\\analysis{idAnalysis}.bin')
+            with open(self.database+f'\\analysis\\analysis{idAnalysis}.bin', "rb") as f:
                 d = pickle.load(f)
                 return d
         except Exception as e:
