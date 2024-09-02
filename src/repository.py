@@ -30,8 +30,8 @@ class File(Path):
 class Configuration:
     def __init__(self, root):
         self.root = root
-        self.last_id_game = 0
-        self.last_id_analysis = 0
+        self.last_id_game = 1
+        self.last_id_analysis = 1
         self.load()
     
     def save(self):
@@ -66,20 +66,35 @@ class Repository:
 
     def saveGame(self, savedGame):
         try:
-            with open(self.database+f'\\games\\game{self.config.last_id_game+1}.bin', "wb") as f:
-                self.config.last_id_game+=1
+            game_dir = os.path.join(self.database, 'games')
+            os.makedirs(game_dir, exist_ok=True)
+            
+            file_path = os.path.join(game_dir, f'game{self.config.last_id_game + 1}.bin')
+            print(f"Saving game to: {file_path}")
+            
+            with open(file_path, "wb") as f:
+                self.config.last_id_game += 1
+        
                 pickle.dump(savedGame, f)
+         
+                print("Game saved successfully.")
         except Exception as e:
-            print(e)
+            print(f"Failed to save game: {e}")
 
     def saveAnalysis(self, savedAnalysis):
         try:
-            print(self.database)
-            with open(self.database+f'\\analysis\\analysis{self.config.last_id_analysis+1}.bin', "wb") as f:
-                self.config.last_id_analysis+=1
+            analysis_dir = os.path.join(self.database, 'analysis')
+            os.makedirs(analysis_dir, exist_ok=True)
+            
+            file_path = os.path.join(analysis_dir, f'analysis{self.config.last_id_analysis + 1}.bin')
+            print(f"Saving analysis to: {file_path}")
+            
+            with open(file_path, "wb") as f:
+                self.config.last_id_analysis += 1
                 pickle.dump(savedAnalysis, f)
+                print("Analysis saved successfully.")
         except Exception as e:
-            print(e)
+            print(f"Failed to save analysis: {e}")
 
     def getGame(self, idGame):
         try:

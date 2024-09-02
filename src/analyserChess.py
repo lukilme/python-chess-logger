@@ -8,13 +8,21 @@ from src.view.loadingWindow import LoadingWindow
 import pandas as pd
 from src.analyserTool import AnalyserTool
 
-
+class MetaDataGame:
+    def __init__(self, event, site, date, round, black, white, result):
+        self.event = event
+        self.site = site
+        self.date = date
+        self.round = round
+        self.black = black
+        self.white = white
+        self.result = result
 
 class AnalyserChess:
     def __init__(self):
         self.path = pathlib.Path().resolve()
         self.enginepath = str(self.path)+"\\engines\\stockfish\\"
-        self.enginefile = "stockfish-windows-x86-64-sse41-popcnt"
+        self.actual_engine = "stockfish-windows-x86-64-sse41-popcnt"
         self.totaltime = 1 
     
     def analyse(self, path_game):
@@ -23,19 +31,29 @@ class AnalyserChess:
         board = chess.Board()
         gamedata = []
         node = game
-      
+        
         plytotal = sum(1 for _ in node.mainline())
-        time = self.totaltime * 5 / plytotal 
+        time = self.totaltime * 12 / plytotal 
         root = LoadingWindow("Game Analisys!")
         counter = 0
         moves_len = (len(str(game.mainline_moves()).split(".")) - 2) * 2
-        chess.engine.Limit(depth=10)
-        with chess.engine.SimpleEngine.popen_uci(self.enginepath + self.enginefile) as engine:
+        chess.engine.Limit(depth=15)
+        with chess.engine.SimpleEngine.popen_uci(self.enginepath + self.actual_engine) as engine:
             
             node = game
             cap = 30  
             ply = 0
             matedist = "N/A"
+            metaDataGame = MetaDataGame(
+            game.headers["Event"],
+            game.headers["Site"],
+            game.headers["Date"],
+            game.headers["Round"],
+            game.headers["White"],
+            game.headers["Black"],
+            game.headers["Result"]
+            )
+            
             while not node.is_end():
                 next_node = node.variations[0]
                 move = node.board().san(next_node.move)
@@ -63,17 +81,10 @@ class AnalyserChess:
 
               
                     top_moves = engine.analyse(board, chess.engine.Limit(time=time), multipv=3)
-                    best_sequences = []
-                 
-                    for mv in top_moves:
-                        move_seq = [board.san(mv['pv'][i]) for i in range(min(3, len(mv['pv'])))]
-                        best_sequences.append((move_seq, mv['score'].relative.score()))
-
-                  
-                    print(f"Melhores Sequências (Ply {ply}):")
-                    for i, (seq, score) in enumerate(best_sequences, start=1):
-                        print(f"Sequência {i}: {', '.join(seq)} - Pontuação: {score / 100 if isinstance(score, int) else score}")
-
+                    print("="*60)
+                    print(len(top_moves))
+                    print(top_moves)
+                    print("="*60)
                     board.push(next_node.move)  
 
                     material = AnalyserTool.material_balance(board)
@@ -98,14 +109,15 @@ class AnalyserChess:
                     root.update()
                 
                 except Exception as e:
-                    print(f"Something wrong: {e}")
+                    raise(e)
+                    
                     break
         
         gamedata = pd.DataFrame(gamedata, columns=['Ply', 'Side', 'Move', 'CP', 'Mate', 'CP Delta', 'Suggested', 'Depth', 'Material',
                                                     'Development', 'Mobility', 'Control', 'Tension', 'Safety'])
         gamedata['CP'] = gamedata['CP'].shift(-1)
         gamedata['CP Delta'] = gamedata['CP Delta'].shift(-1)
-        return gamedata
-
+        pgnin.close()
+        return metaDataGame, gamedata
         
 

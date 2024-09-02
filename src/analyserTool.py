@@ -4,10 +4,6 @@ from collections import Counter
 class AnalyserTool:
     @staticmethod
     def material_balance(board):
-        """
-        This function calculates the material
-        difference between White and Black.
-        """
         piece_values = {"p": 100, "n": 300, "b": 300, "r": 500, "q": 900, "k": 20000}
         pieces = Counter(board.piece_map().values())
         white_material = sum(
@@ -20,10 +16,6 @@ class AnalyserTool:
 
     @staticmethod
     def calculate_development(board):
-        """
-        This function evaluates how well each
-        side has developed their pieces.
-        """
         initial_squares = {
             chess.A1,
             chess.B1,
@@ -56,18 +48,11 @@ class AnalyserTool:
 
     @staticmethod
     def calculate_mobility(board):
-        """
-        This function calculates the number of legal
-        moves available to the current player."""
         mobility = len(list(board.legal_moves))
         return mobility
 
     @staticmethod
     def calculate_control(board):
-        """
-        This function calculates the difference in
-        the number of squares controlled by each side.
-        """
         control = sum(
             len(board.attackers(chess.WHITE, square))
             - len(board.attackers(chess.BLACK, square))
@@ -77,10 +62,6 @@ class AnalyserTool:
 
     @staticmethod
     def calculate_tension(board):
-        """
-        This function calculates the number of squares
-        that are under attack by both White and Black.
-        """
         tension = sum(
             1
             for square in chess.SQUARES
@@ -91,10 +72,6 @@ class AnalyserTool:
 
     @staticmethod
     def calculate_king_safety(board):
-        """
-        calculate the number of pieces that are in
-        contact with the king's sensitive squares, by distance of rist
-        """
         safety = 0
         for king_square in [board.king(chess.WHITE), board.king(chess.BLACK)]:
             for piece_square in chess.SQUARES:
