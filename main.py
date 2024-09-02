@@ -6,5 +6,5 @@ while(True):
     if entrada == 'exit':
         break
     else:
-        app.showGame(1)
+        app.analyseGame('1')
     

@@ -1,10 +1,14 @@
 import chess
+from chess import engine
 import pathlib
 import io
+import chess.engine
 import chess.pgn as chess_pgn
 from src.view.loadingWindow import LoadingWindow
 import pandas as pd
 from src.analyserTool import AnalyserTool
+
+
 
 class AnalyserChess:
     def __init__(self):
@@ -19,12 +23,15 @@ class AnalyserChess:
         board = chess.Board()
         gamedata = []
         node = game
+      
         plytotal = sum(1 for _ in node.mainline())
         time = self.totaltime * 5 / plytotal 
         root = LoadingWindow("Game Analisys!")
         counter = 0
         moves_len = (len(str(game.mainline_moves()).split(".")) - 2) * 2
+        chess.engine.Limit(depth=10)
         with chess.engine.SimpleEngine.popen_uci(self.enginepath + self.enginefile) as engine:
+            
             node = game
             cap = 30  
             ply = 0
@@ -37,6 +44,7 @@ class AnalyserChess:
 
                 try:
                     result = engine.analyse(board, chess.engine.Limit(time=time))
+                    print(result)
                     score = result['score'].relative
 
                     if isinstance(score, chess.engine.Cp):
@@ -52,6 +60,19 @@ class AnalyserChess:
                         cap = -cap
 
                     cpdelta = cap - capprior
+
+              
+                    top_moves = engine.analyse(board, chess.engine.Limit(time=time), multipv=3)
+                    best_sequences = []
+                 
+                    for mv in top_moves:
+                        move_seq = [board.san(mv['pv'][i]) for i in range(min(3, len(mv['pv'])))]
+                        best_sequences.append((move_seq, mv['score'].relative.score()))
+
+                  
+                    print(f"Melhores Sequências (Ply {ply}):")
+                    for i, (seq, score) in enumerate(best_sequences, start=1):
+                        print(f"Sequência {i}: {', '.join(seq)} - Pontuação: {score / 100 if isinstance(score, int) else score}")
 
                     board.push(next_node.move)  
 
@@ -79,10 +100,12 @@ class AnalyserChess:
                 except Exception as e:
                     print(f"Something wrong: {e}")
                     break
+        
         gamedata = pd.DataFrame(gamedata, columns=['Ply', 'Side', 'Move', 'CP', 'Mate', 'CP Delta', 'Suggested', 'Depth', 'Material',
                                                     'Development', 'Mobility', 'Control', 'Tension', 'Safety'])
         gamedata['CP'] = gamedata['CP'].shift(-1)
         gamedata['CP Delta'] = gamedata['CP Delta'].shift(-1)
         return gamedata
+
         
 
