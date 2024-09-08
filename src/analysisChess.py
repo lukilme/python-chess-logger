@@ -6,7 +6,7 @@ import chess.engine
 import chess.pgn as chess_pgn
 from src.view.loadingWindow import LoadingWindow
 import pandas as pd
-from src.analyserTool import AnalyserTool
+from src.analysisParameters import analysisParameters
 
 class MetaDataGame:
     def __init__(self, event, site, date, round, black, white, result):
@@ -31,29 +31,28 @@ class AnalyserChess:
         board = chess.Board()
         gamedata = []
         node = game
-        
         plytotal = sum(1 for _ in node.mainline())
         time = self.totaltime * 12 / plytotal 
         root = LoadingWindow("Game Analisys!")
         counter = 0
         moves_len = (len(str(game.mainline_moves()).split(".")) - 2) * 2
-        chess.engine.Limit(depth=15)
+
         with chess.engine.SimpleEngine.popen_uci(self.enginepath + self.actual_engine) as engine:
-            
+            engine : chess.engine.SimpleEngine = engine
+           
             node = game
             cap = 30  
             ply = 0
             matedist = "N/A"
             metaDataGame = MetaDataGame(
-            game.headers["Event"],
-            game.headers["Site"],
-            game.headers["Date"],
-            game.headers["Round"],
-            game.headers["White"],
-            game.headers["Black"],
-            game.headers["Result"]
+                game.headers["Event"],
+                game.headers["Site"],
+                game.headers["Date"],
+                game.headers["Round"],
+                game.headers["White"],
+                game.headers["Black"],
+                game.headers["Result"]
             )
-            
             while not node.is_end():
                 next_node = node.variations[0]
                 move = node.board().san(next_node.move)
@@ -87,12 +86,12 @@ class AnalyserChess:
                     print("="*60)
                     board.push(next_node.move)  
 
-                    material = AnalyserTool.material_balance(board)
-                    development = AnalyserTool.calculate_development(board)
-                    mobility = AnalyserTool.calculate_mobility(board)
-                    control = AnalyserTool.calculate_control(board)
-                    tension = AnalyserTool.calculate_tension(board)
-                    safety = AnalyserTool.calculate_king_safety(board)
+                    material = analysisParameters.material_balance(board)
+                    development = analysisParameters.calculate_development(board)
+                    mobility = analysisParameters.calculate_mobility(board)
+                    control = analysisParameters.calculate_control(board)
+                    tension = analysisParameters.calculate_tension(board)
+                    safety = analysisParameters.calculate_king_safety(board)
 
                     movedata = (ply, side, move, cap, matedist, cpdelta, suggested, depth, material,
                                 development, mobility, control, tension, safety)
@@ -110,8 +109,6 @@ class AnalyserChess:
                 
                 except Exception as e:
                     raise(e)
-                    
-                    break
         
         gamedata = pd.DataFrame(gamedata, columns=['Ply', 'Side', 'Move', 'CP', 'Mate', 'CP Delta', 'Suggested', 'Depth', 'Material',
                                                     'Development', 'Mobility', 'Control', 'Tension', 'Safety'])
@@ -120,4 +117,3 @@ class AnalyserChess:
         pgnin.close()
         return metaDataGame, gamedata
         
-

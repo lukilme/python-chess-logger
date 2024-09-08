@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class visualGraph:
+class VisualAnalysis:
     def __init__(self):
         pass
 

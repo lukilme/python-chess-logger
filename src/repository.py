@@ -4,34 +4,13 @@ import glob
 import os
 import subprocess
 import json
-
-class Path:
-    def __init__(self, path):
-        self.path = path
-        self.name = self._get_name(path)  # Extract name using a helper function
-
-    def _get_name(self, path):
-        return os.path.basename(path) 
-
-class Directory(Path):
-    def __init__(self, path):
-        super().__init__(path) 
-        self.children = list()
-
-class File(Path):
-    def __init__(self, path):
-        super().__init__(path)  
-        self.extension = self._get_extension(path) 
-
-    def _get_extension(self, path):
-        return os.path.splitext(path)[1]  
-
+import logging
 
 class Configuration:
     def __init__(self, root):
         self.root = root
-        self.last_id_game = 1
-        self.last_id_analysis = 1
+        self.last_id_game = 0
+        self.last_id_analysis = 0
         self.load()
     
     def save(self):
@@ -40,20 +19,21 @@ class Configuration:
                 'last_id_game': self.last_id_game,
                 'last_id_analysis': self.last_id_analysis
             }
-            os.makedirs(f'{self.root}\\chess-logger', exist_ok=True)
-            with open(f'{self.root}\\chess-logger\\config.json', "w") as f:
+            os.makedirs(f'{self.root}\\python-chess-logger', exist_ok=True)
+            with open(f'{self.root}\\python-chess-logger\\config.json', "w") as f:
                 json.dump(config_data, f)
         except Exception as e:
+            logging.error(e)
             print(e)
 
     def load(self):
         try:
-            with open(f'{self.root}\\chess-logger\\config.json', "r") as f:
+            with open(f'{self.root}\\python-chess-logger\\config.json', "r") as f:
                 loaded_config = json.load(f)
                 self.last_id_game = loaded_config.get('last_id_game', 0)
                 self.last_id_analysis = loaded_config.get('last_id_analysis', 0)
         except Exception as e:
-            print("Erro ao carregar a configuração.")
+            logging.error(e)
             print(e)
     
 class Repository:
@@ -62,6 +42,7 @@ class Repository:
         self.root = pathlib.Path().resolve()
         self.config = Configuration(self.root.parent)
         self.database = str(self.root) + "\\src\\data"
+        logging.info("Repository started!")
     
 
     def saveGame(self, savedGame):
@@ -70,30 +51,34 @@ class Repository:
             os.makedirs(game_dir, exist_ok=True)
             
             file_path = os.path.join(game_dir, f'game{self.config.last_id_game + 1}.bin')
-            print(f"Saving game to: {file_path}")
-            
+            logging.warning(f"Saving game to: {file_path}")
+
             with open(file_path, "wb") as f:
                 self.config.last_id_game += 1
         
                 pickle.dump(savedGame, f)
-         
-                print("Game saved successfully.")
+                logging.info(f"Game saved successfully!")
+                self.config.last_id_game+=1
+                self.config.save()
+                
         except Exception as e:
+            logging.error(f"Failed to save game: {e}")
             print(f"Failed to save game: {e}")
 
     def saveAnalysis(self, savedAnalysis):
         try:
             analysis_dir = os.path.join(self.database, 'analysis')
             os.makedirs(analysis_dir, exist_ok=True)
-            
             file_path = os.path.join(analysis_dir, f'analysis{self.config.last_id_analysis + 1}.bin')
-            print(f"Saving analysis to: {file_path}")
+            logging.warning(f"Saving analysis to: {file_path}")
             
             with open(file_path, "wb") as f:
-                self.config.last_id_analysis += 1
                 pickle.dump(savedAnalysis, f)
-                print("Analysis saved successfully.")
+                logging.info(f"Analysis saved successfully!")
+                self.config.last_id_analysis+=1
+                self.config.save()
         except Exception as e:
+            logging.error(f"Failed to save analysis: {e}")
             print(f"Failed to save analysis: {e}")
 
     def getGame(self, idGame):
@@ -106,7 +91,6 @@ class Repository:
 
     def getAnalysis(self, idAnalysis):
         try:
-            print(self.database+f'\\analysis\\analysis{idAnalysis}.bin')
             with open(self.database+f'\\analysis\\analysis{idAnalysis}.bin', "rb") as f:
                 d = pickle.load(f)
                 return d
@@ -115,7 +99,6 @@ class Repository:
 
 
     def listContent(self, folder: str) -> list[list]:
-        #str(repo.database / "*")
         result = glob.glob(folder)
 
         for folder in result:
@@ -141,12 +124,3 @@ class Repository:
         
     def closeRepository(self):
         self.config.save()
-
-
-if __name__ == '__main__':
-    repo = Repository()
-    print(repo.root)
-    repo.closeRepository()
-    
-    #repo.listContent2(repo.database)
-

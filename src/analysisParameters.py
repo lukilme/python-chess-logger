@@ -1,7 +1,7 @@
 import chess
 from collections import Counter
 
-class AnalyserTool:
+class analysisParameters:
     @staticmethod
     def material_balance(board):
         piece_values = {"p": 100, "n": 300, "b": 300, "r": 500, "q": 900, "k": 20000}
@@ -78,6 +78,6 @@ class AnalyserTool:
                 piece = board.piece_at(piece_square)
                 if piece:
                     distance = max(chess.square_distance(king_square, piece_square), 1)
-                    # safety += piece.piece_type / distance
-                    safety += piece.piece_type
+                    safety += piece.piece_type / distance
+                    #safety += piece.piece_type
         return safety

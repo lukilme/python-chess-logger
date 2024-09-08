@@ -1,28 +1,20 @@
-[Event "vs Computer"]
+[Event "Live Chess"]
 [Site "Chess.com"]
-[Date "2024.07.14"]
+[Date "2024.09.07"]
 [Round "?"]
-[White "Wally-BOT"]
-[Black "LuKilmer"]
+[White "LeaJanPia"]
+[Black "DanteDietz"]
 [Result "0-1"]
-[ECO "B24"]
-[WhiteElo "1800"]
-[BlackElo "800"]
-[TimeControl "1/0"]
-[EndDate "2024.07.14"]
-[Termination "LuKilmer won by checkmate"]
+[ECO "D00"]
+[WhiteElo "1082"]
+[BlackElo "1097"]
+[TimeControl "180"]
+[EndTime "7:07:01 PDT"]
+[Termination "DanteDietz won by checkmate"]
 
-1. e4 c5 2. Nc3 d6 3. g3 Nc6 4. Bg2 e5 5. d3 Nf6 6. h3 Be6 7. Nd5 Be7 8. Be3 O-O
-9. c3 Nd7 10. Nf3 Bf6 11. O-O Bxd5 12. exd5 Ne7 13. c4 Nb6 14. a4 a5 15. Qe2 Qd7
-16. Bd2 Nxa4 17. b3 Nb6 18. Rxa5 Rxa5 19. Bxa5 Nbc8 20. Ra1 b6 21. Bc3 Ng6 22.
-b4 Nce7 23. h4 cxb4 24. Bxb4 e4 25. Ra2 exf3 26. Bxf3 Ne5 27. Be4 N7g6 28. f4
-Ng4 29. Kg2 Bd4 30. h5 Ne3+ 31. Kh1 Ne7 32. Qe1 Qh3+ 33. Rh2 Qf1+ 34. Qxf1 Nxf1
-35. Bxd6 Nxh2 36. Kxh2 Bc5 37. Bxe7 Bxe7 38. Bf3 Bc5 39. h6 gxh6 40. f5 f6 41.
-Kh3 Re8 42. d4 Bxd4 43. d6 Bc5 44. d7 Rd8 45. Bc6 Kf7 46. Kh4 Ke7 47. Kh5 Kd6
-48. Bb5 Ke5 49. Kxh6 Kxf5 50. Kxh7 Kg4 51. Kg6 f5 52. Ba4 Bf2 53. Kf6 Bxg3 54.
-Ke7 Rb8 55. Bd1+ Kg5 56. d8=Q Rxd8 57. Kxd8 Bf2 58. Bf3 Bc5 59. Bc6 f4 60. Kd7
-Kg4 61. Bd5 Kg3 62. Kc6 f3 63. Be4 f2 64. Bd3 Kg2 65. Kb5 Kg1 66. Kc6 f1=Q 67.
-Bxf1 Kxf1 68. Kd7 Ke2 69. Kc6 Kd3 70. Kd5 Kc3 71. Ke5 Kxc4 72. Ke4 b5 73. Ke5 b4
-74. Ke6 b3 75. Kf7 Kc3 76. Ke6 Kc2 77. Kd5 Ba3 78. Kd4 b2 79. Ke5 b1=Q 80. Kf5
-Qe1 81. Kg6 Qf2 82. Kh5 Qg1 83. Kh6 Bc1+ 84. Kh7 Kc3 85. Kh8 Kd4 86. Kh7 Ke5 87.
-Kh8 Kf6 88. Kh7 Qg7# 0-1
+1. d4 d5 2. Nc3 e6 3. a3 Nc6 4. g3 Nf6 5. Bg2 g6 6. Nf3 Bg7 7. O-O O-O 8. e3 Re8
+9. b4 a6 10. Bb2 Nd7 11. Na4 e5 12. Rc1 e4 13. Nd2 b5 14. Nc3 Nf6 15. Ba1 Be6
+16. Rb1 Qd7 17. a4 Bh3 18. axb5 axb5 19. Nxb5 Bxg2 20. Kxg2 Ne7 21. Nc3 Nf5 22.
+Bb2 Bh6 23. Ra1 Bxe3 24. Qe2 Rxa1 25. Rxa1 Bxd4 26. Nf1 Qc6 27. Nd1 Bxb2 28.
+Nxb2 Qd7 29. Rd1 Ng7 30. Ne3 Ne6 31. Qd2 c6 32. c4 Ng5 33. cxd5 Qh3+ 34. Kg1
+Nf3+ 35. Kh1 Qxh2# 0-1

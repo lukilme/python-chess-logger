@@ -2,7 +2,6 @@ import time
 from tkinter import ttk
 import tkinter as tk
 
-
 class LoadingWindow(tk.Tk):
     def __init__(self, operation):
         super().__init__()
