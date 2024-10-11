@@ -10,7 +10,7 @@ class Application:
         self.graph = VisualAnalysis()
 
     def analyseGame(self, path_game):
-        path_game = '\\src\\data\\games\\game'+str(path_game)+'.pgn'
+        path_game = '/src/data/games/game'+str(path_game)+'.pgn'
         print(path_game)
         metaDataGame, gameAnalyse = self.analyseChess.analyse(path_game)
         self.repository.saveAnalysis(gameAnalyse)

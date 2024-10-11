@@ -19,8 +19,8 @@ class Configuration:
                 'last_id_game': self.last_id_game,
                 'last_id_analysis': self.last_id_analysis
             }
-            os.makedirs(f'{self.root}\\python-chess-logger', exist_ok=True)
-            with open(f'{self.root}\\python-chess-logger\\config.json', "w") as f:
+            os.makedirs(f'{self.root}/python-chess-logger', exist_ok=True)
+            with open(f'{self.root}/python-chess-logger/config.json', "w") as f:
                 json.dump(config_data, f)
         except Exception as e:
             logging.error(e)
@@ -28,7 +28,7 @@ class Configuration:
 
     def load(self):
         try:
-            with open(f'{self.root}\\python-chess-logger\\config.json', "r") as f:
+            with open(f'{self.root}/python-chess-logger/config.json', "r") as f:
                 loaded_config = json.load(f)
                 self.last_id_game = loaded_config.get('last_id_game', 0)
                 self.last_id_analysis = loaded_config.get('last_id_analysis', 0)
@@ -41,7 +41,7 @@ class Repository:
         self.system = "Windows"
         self.root = pathlib.Path().resolve()
         self.config = Configuration(self.root.parent)
-        self.database = str(self.root) + "\\src\\data"
+        self.database = str(self.root) + "/src/data"
         logging.info("Repository started!")
     
 
@@ -83,7 +83,7 @@ class Repository:
 
     def getGame(self, idGame):
         try:
-            with open(self.database+f'\\games\\game{idGame}.bin', "rb") as f:
+            with open(self.database+f'/games/game{idGame}.bin', "rb") as f:
                 d = pickle.load(f)
                 return d
         except Exception as e:
@@ -91,7 +91,7 @@ class Repository:
 
     def getAnalysis(self, idAnalysis):
         try:
-            with open(self.database+f'\\analysis\\analysis{idAnalysis}.bin', "rb") as f:
+            with open(self.database+f'/analysis/analysis{idAnalysis}.bin', "rb") as f:
                 d = pickle.load(f)
                 return d
         except Exception as e:
