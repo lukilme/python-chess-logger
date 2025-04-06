@@ -1,21 +1,15 @@
 import logging
 from src.app import Application
+import src.utils.logger as lg
+import os
 
-logging.basicConfig(
-    level=logging.INFO, 
-    format='%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s',  
-    datefmt='%H:%M:%S',  
-    handlers=[
-        logging.FileHandler("app.log", mode='w'),
-    ]
-)
 
 app = Application()
 entrada = ''
 while(True):
     entrada = input('input: ')
     if(entrada!='0'):
-        app.analyseGame(entrada)
+        app.analyse_game(entrada)
     else:
         break
 

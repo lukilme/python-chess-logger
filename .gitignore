@@ -1,3 +1,4 @@
-engines/*
+engine/*
 .venv
 .env
+__pycache__

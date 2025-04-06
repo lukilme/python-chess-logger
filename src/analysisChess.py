@@ -21,8 +21,8 @@ class MetaDataGame:
 class AnalyserChess:
     def __init__(self):
         self.path = pathlib.Path().resolve()
-        self.enginepath = str(self.path)+"/engines/stockfish/"
-        self.actual_engine = "stockfish-ubuntu-x86-64-sse41-popcnt"
+        self.enginepath = str(self.path)+"/engine/stockfish/"
+        self.actual_engine = "stockfish-ubuntu-x86-64"
         self.totaltime = 1 
     
     def analyse(self, path_game):
