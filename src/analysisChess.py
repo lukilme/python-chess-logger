@@ -1,12 +1,12 @@
 import chess
-from chess import engine
-import pathlib
 import io
 import chess.engine
 import chess.pgn as chess_pgn
 from src.view.loadingWindow import LoadingWindow
 import pandas as pd
 from src.analysisParameters import analysisParameters
+from infrastructure.stockfish_client import StockfishClient
+import pathlib
 
 class MetaDataGame:
     def __init__(self, event, site, date, round, black, white, result):
@@ -21,8 +21,7 @@ class MetaDataGame:
 class AnalyserChess:
     def __init__(self):
         self.path = pathlib.Path().resolve()
-        self.enginepath = str(self.path)+"/engine/stockfish/"
-        self.actual_engine = "stockfish-ubuntu-x86-64"
+        self.stockfish = StockfishClient(project_root=self.path)
         self.totaltime = 1 
     
     def analyse(self, path_game):
@@ -37,9 +36,7 @@ class AnalyserChess:
         counter = 0
         moves_len = (len(str(game.mainline_moves()).split(".")) - 2) * 2
 
-        with chess.engine.SimpleEngine.popen_uci(self.enginepath + self.actual_engine) as engine:
-            engine : chess.engine.SimpleEngine = engine
-           
+        with self.stockfish as engine:
             node = game
             cap = 30  
             ply = 0
