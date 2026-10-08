@@ -4,3 +4,4 @@
 __pycache__/*
 .devkit
 .vscode
+.pytest_cache

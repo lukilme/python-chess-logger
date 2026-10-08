@@ -63,7 +63,7 @@ def test_client_reports_missing_engine(tmp_path: Path) -> None:
 
 def test_client_reports_engine_that_does_not_answer_uci(tmp_path: Path) -> None:
     executable = write_fake_engine(tmp_path / "stockfish", ready=False)
-    client = StockfishClient(executable=executable)
+    client = StockfishClient(executable=executable, startup_timeout=0.1)
 
     status = client.check()
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass
 from pathlib import Path
 import re
@@ -148,7 +149,12 @@ class StockfishClient:
                 probe.ping()
             finally:
                 probe.quit()
-        except (OSError, chess.engine.EngineError, TimeoutError) as exc:
+        except (
+            OSError,
+            chess.engine.EngineError,
+            TimeoutError,
+            asyncio.TimeoutError,
+        ) as exc:
             return StockfishStatus(
                 False,
                 executable,
@@ -179,7 +185,12 @@ class StockfishClient:
             self._engine = chess.engine.SimpleEngine.popen_uci(
                 str(executable), timeout=self.startup_timeout
             )
-        except (OSError, chess.engine.EngineError, TimeoutError) as exc:
+        except (
+            OSError,
+            chess.engine.EngineError,
+            TimeoutError,
+            asyncio.TimeoutError,
+        ) as exc:
             raise StockfishUnavailableError(
                 f"Could not start Stockfish at {executable}: {exc}"
             ) from exc
